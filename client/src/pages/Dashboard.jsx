@@ -1,6 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { getDashboardStats } from '../services/analyticsService';
 import { FiUsers, FiFileText, FiMessageSquare } from 'react-icons/fi'; // Using react-icons for some nice visuals
+
+import * as React from 'react';
+import { BarChart } from '@mui/x-charts/BarChart';
+
+// export default function BasicBars() {
+//   return (
+    
+//   );
+// }
 
 const StatCard = ({ icon, title, value, label }) => (
   <div className="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 hover:shadow-xl transition-shadow duration-300">
@@ -75,7 +84,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="container mx-auto p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-800 m-6">Admin Dashboard</h1>
             
             {/* Main Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -108,8 +117,14 @@ const AdminDashboard = () => {
                     <h2 className="text-xl font-semibold text-gray-700 mb-2">User Activity Chart</h2>
                     <p className="text-gray-500">This is a placeholder for a future chart, which could show user sign-ups over time.</p>
                     {/* You would integrate a library like Recharts or Chart.js here */}
-                    <div className="w-full h-48 bg-gray-100 mt-4 rounded-lg flex items-center justify-center">
-                         <span className="text-gray-400">Chart Area</span>
+                   
+                    <div className="w-full h-full bg-gray-100 m-4 p-10 rounded-lg flex items-center justify-center">
+                         {/* <span className="text-gray-400">Chart Area</span> */}
+                          <BarChart
+      xAxis={[{ data: ['group A', 'group B', 'group C'] }]}
+      series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
+      height={300}
+    />
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // 1. Define the base URL for your backend API.
 // It should point to your server, not including the /api part.
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://digital-mental-health-and-psycholog.vercel.app';
 
 // 2. Create a reusable axios instance with your base configuration.
 export const api = axios.create({

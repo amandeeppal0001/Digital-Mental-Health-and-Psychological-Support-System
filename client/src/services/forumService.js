@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/forum';
+const API_URL = import.meta.env.VITE_API_URL || 'https://digital-mental-health-and-psycholog.vercel.app/api/forum';
 
 const api = axios.create({
     baseURL: API_URL,
@@ -23,6 +23,10 @@ export const getAllPosts = () => {
 
 export const getPostById = (postId) => {
     return api.get(`/${postId}`);
+};
+
+export const addCommentToPost = (postId) => {
+    return api.get(`/${postId}/comments`);
 };
 
 export const createPost = (postData) => {

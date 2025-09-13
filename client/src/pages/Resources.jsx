@@ -89,16 +89,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 // In Resources.jsx
 import React, { useState, useEffect } from 'react';
 // REMOVE: import axios from 'axios';
@@ -134,9 +124,22 @@ const ResourceCard = ({ resource }) => {
                 </span>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">{resource.title}</h3>
                 <p className="text-gray-600 mb-4">{resource.content.substring(0, 100)}...</p>
-                <Link to={`/resources/${resource._id}`} className="font-semibold text-blue-600 hover:underline">
+                {
+                   ( resource.category == 'Article' || resource.category == 'Guide' )&&(
+                        <Link to={`/resources/${resource._id}`} className="font-semibold text-blue-600 hover:underline">
                     Read More &rarr;
                 </Link>
+                    )
+                }
+                {
+                     resource.category !== 'Article' && resource.category !== 'Guide' && (
+                         <Link to={`/resources/${resource._id}`} className="font-semibold text-blue-600 hover:underline">
+              to play click here &rarr;
+                </Link>
+                     )
+                
+                }
+                
             </div>
         </div>
     );
@@ -173,7 +176,7 @@ const Resources = () => {
 
     return (
         <div className="container mx-auto">
-            <h1 className="text-4xl font-bold text-center text-gray-800 mb-10">Psychoeducational Hub</h1>
+            <h1 className="text-4xl font-bold text-center text-gray-800 mt-20 mb-10">Psychoeducational Hub</h1>
             {resources.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {resources.map((resource) => (

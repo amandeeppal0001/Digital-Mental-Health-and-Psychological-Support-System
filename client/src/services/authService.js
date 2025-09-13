@@ -41,7 +41,8 @@
 
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// const API_URL = import.meta.env.VITE_API_URL || 'https://digital-mental-health-and-psycholog.vercel.app';
+const API_URL = 'https://digital-mental-health-and-psycholog.vercel.app/api';
 
 // Setup axios instance
 export const api = axios.create({

@@ -2,7 +2,8 @@ import axios from 'axios';
 
 // Create an Axios instance
 const API = axios.create({
-  baseURL: /*process.env.REACT_APP_API_URL || */'http://localhost:5000', // Adjust if your backend URL is different
+  baseURL: 'https://digital-mental-health-and-psycholog.vercel.app/api',
+  // baseURL: /*process.env.REACT_APP_API_URL || */'http://localhost:5000', // Adjust if your backend URL is different
   withCredentials: true, // Important for sending cookies if you use them for sessions
 });
 
@@ -20,7 +21,7 @@ API.interceptors.request.use((req) => {
  * @desc    Fetches all users with the 'counselor' role.
  * @route   GET /api/appointments/counselors
  */
-export const getAvailableCounselors = () => API.get('/appointments/counselors');
+export const getAvailableCounselors = () => API.get('/appointments/counselor');
 
 /**
  * @desc    Creates a new appointment for the logged-in user.
@@ -33,7 +34,7 @@ export const bookAppointment = (bookingData) => API.post('/appointments', bookin
  * @desc    Fetches all appointments booked by the current logged-in user.
  * @route   GET /api/appointments/my-bookings
  */
-export const getMyBookings = () => API.get('/appointments/my-bookings');
+export const getMyBookings = () => API.get('/appointments/my-appointments');
 
 /**
  * @desc    Cancels a specific appointment by its ID.

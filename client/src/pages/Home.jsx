@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div className="text-center bg-white p-12 rounded-lg shadow-lg">
+    <div className="text-center bg-gray-400 p-12 rounded-lg shadow-lg">
       <h1 className="text-5xl font-bold text-gray-800 mb-4">
         Welcome to the Digital Mental Health Support System
       </h1>
@@ -23,6 +23,8 @@ const Home = () => {
         >
           Login
         </Link>
+
+        
       </div>
     </div>
   );

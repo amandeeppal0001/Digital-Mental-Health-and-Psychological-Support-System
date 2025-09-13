@@ -41,7 +41,7 @@ const Forum = () => {
 
     return (
         <div className="container mx-auto p-8">
-            <h1 className="text-3xl font-bold mb-4">Peer Support Forum</h1>
+            <h1 className="text-3xl font-bold m-4">Peer Support Forum</h1>
             
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
                 <h2 className="text-xl font-semibold mb-4">Create a new post (Anonymous)</h2>

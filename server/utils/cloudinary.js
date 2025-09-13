@@ -38,6 +38,12 @@ cloudinary.config({
       const uploadPdfOnCloudinary = async (localFilePath) => {
         try{
             if(!localFilePath) return null
+
+
+        //     cloudinary.v2.uploader
+        //  .multi("topic",
+        //   {format: "pdf", transformation: {width: 800, crop: "lfill", gravity: "auto"}})
+        //        .then(result=>console.log(result));
             // uplaod the file on cloudinary 
             const response = await cloudinary.uploader.upload(localFilePath, {
                 resource_type: "raw"
