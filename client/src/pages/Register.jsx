@@ -231,7 +231,7 @@ const Register = () => {
                             type="password"
                             id="password"
                             name="password"
-                            autoComplete="new-password"
+                            autoComplete="password"
                             value={password}
                             onChange={onChange}
                             required
@@ -267,7 +267,7 @@ const Register = () => {
                                 />
                                 <span>Admin</span>
                             </label>
-                            <label className="flex items-center space-x-2">
+                            {/* <label className="flex items-center space-x-2">
                                 <input
                                     type="radio"
                                     name="role"
@@ -277,7 +277,7 @@ const Register = () => {
                                     className="form-radio"
                                 />
                                 <span>Counselor</span>
-                            </label>
+                            </label> */}
                         </div>
                     </div>
 

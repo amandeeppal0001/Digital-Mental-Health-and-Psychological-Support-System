@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 // import { getAvailableCounselors, bookAppointment, getMyBookings, cancelBooking } from '../services/appointmentService';
-import {  bookAppointment, getMyBookings, cancelBooking } from '../services/appointmentService';
+import { getAvailableCounselors,  bookAppointment, getMyBookings, cancelBooking } from '../services/appointmentService';
 
 // Pre-defined time slots for simplicity. In a more advanced version,
 // this could be fetched from the backend based on counselor availability.
 const timeSlots = [
-    '09:00 AM - 09:45 AM',
-    '10:00 AM - 10:45 AM',
-    '11:00 AM - 11:45 AM',
-    '02:00 PM - 02:45 PM',
-    '03:00 PM - 03:45 PM',
-    '04:00 PM - 04:45 PM',
+    '09:00 AM - 10:00 AM',
+    '10:00 AM - 11:00 AM',
+    '11:00 AM - 12:00 AM',
+    '02:00 PM - 03:00 PM',
+    '03:00 PM - 04:00 PM',
+    '04:00 PM - 05:00 PM',
 ];
 
 const Booking = () => {
@@ -37,49 +37,142 @@ const Booking = () => {
         try {
             // Use Promise.all to fetch both sets of data in parallel for better performance
             const [counselorsRes, bookingsRes] = await Promise.all([
-                // getAvailableCounselors(),
+                getAvailableCounselors(),
                 getMyBookings()
             ]);
-            // setCounselors(counselorsRes.data);
+            setCounselors(counselorsRes.data.data);
+             console.log(counselorsRes.data.data);
             setMyBookings(bookingsRes.data);
+            //  console.log(counselors);
         } catch (err) {
             setError('Failed to load page data. Please refresh the page.');
         }
     };
+
 
     useEffect(() => {
         fetchInitialData();
     }, []); // The empty dependency array ensures this runs only once on mount
     
     const { counselor, date, timeSlot, notes } = formData;
+    // console.log(counselor);
     
     // --- Event Handlers ---
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
     
-    const onSubmit = async e => {
-        e.preventDefault();
-        // Basic form validation
-        if (!counselor || !date || !timeSlot) {
-            return setError('Please select a counselor, date, and time slot.');
-        }
-        setLoading(true);
-        setError('');
-        setSuccess('');
-        try {
-            await bookAppointment(formData);
-            setSuccess('Appointment booked successfully! Your bookings list has been updated below.');
-            // Reset the form after successful booking
-            setFormData({ counselor: '', date: '', timeSlot: '', notes: '' });
-            // Re-fetch bookings to show the newly created appointment instantly
-            const bookingsRes = await getMyBookings();
-            setMyBookings(bookingsRes.data);
-        } catch (err) {
-            // Display a user-friendly error from the backend
-            setError(err.response?.data?.message || 'Booking failed. The time slot may be unavailable.');
-        } finally {
-            setLoading(false);
-        }
+const onSubmit = async (e) => {
+  e.preventDefault();
+  if (!counselor || !date || !timeSlot) {
+    return setError("Please select a counselor, date, and time slot.");
+  }
+
+  setLoading(true);
+  setError("");
+  setSuccess("");
+
+  try {
+    // Extract "start time" from "09:00 AM - 10:00 AM"
+    const [startTime] = timeSlot.split(" - ");
+
+    // Parse time into 24-hour format
+    const [time, meridian] = startTime.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (meridian === "PM" && hours !== 12) hours += 12;
+    if (meridian === "AM" && hours === 12) hours = 0;
+
+    // Build formatted string like 2025-09-03T15:00
+    const appointmentDateTime = `${date}T${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+
+    const payload = {
+      counselorId: counselor,
+      appointmentTime: appointmentDateTime,
+      mode: "Online",
     };
+
+    await bookAppointment(payload);
+
+    setSuccess("Appointment booked successfully! Your bookings list has been updated below.");
+    setFormData({ counselor: "", date: "", timeSlot: "", notes: "" });
+
+    const bookingsRes = await getMyBookings();
+    setMyBookings(bookingsRes.data);
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+        "Booking failed. The time slot may be unavailable."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+
+
+//     const onSubmit = async e => {
+//   e.preventDefault();
+//   if (!counselor || !date || !timeSlot) {
+//     return setError("Please select a counselor, date, and time slot.");
+//   }
+
+//   setLoading(true);
+//   setError("");
+//   setSuccess("");
+
+//   try {
+//     // Build ISO datetime string from date + time slot
+//     const [startTime] = timeSlot.split(" - "); // e.g. "09:00 AM"
+//     const appointmentDateTime = new Date(`${date} ${startTime}`).toISOString();
+
+//     const payload = {
+//       counselorId: counselor, // backend expects `counselorId`
+//       appointmentTime: appointmentDateTime,
+//       mode: "Online" // fixed for now
+//     };
+
+//     await bookAppointment(payload);
+
+//     setSuccess("Appointment booked successfully! Your bookings list has been updated below.");
+//     setFormData({ counselor: "", date: "", timeSlot: "", notes: "" });
+
+//     const bookingsRes = await getMyBookings();
+//     setMyBookings(bookingsRes.data);
+//   } catch (err) {
+//     setError(
+//       err.response?.data?.message ||
+//         "Booking failed. The time slot may be unavailable."
+//     );
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+    // const onSubmit = async e => {
+    //     e.preventDefault();
+    //     // Basic form validation
+    //     if (!counselor || !date || !timeSlot) {
+    //         return setError('Please select a counselor, date, and time slot.');
+    //     }
+    //     setLoading(true);
+    //     setError('');
+    //     setSuccess('');
+    //     try {
+    //         await bookAppointment(formData);
+    //         setSuccess('Appointment booked successfully! Your bookings list has been updated below.');
+    //         // Reset the form after successful booking
+    //         setFormData({ counselor: '', date: '', timeSlot: '', notes: '' });
+    //         // Re-fetch bookings to show the newly created appointment instantly
+    //         const bookingsRes = await getMyBookings();
+    //         setMyBookings(bookingsRes.data);
+    //     } catch (err) {
+    //         // Display a user-friendly error from the backend
+    //         setError(err.response?.data?.message || 'Booking failed. The time slot may be unavailable.');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     
     const handleCancel = async (bookingId) => {
         if (window.confirm('Are you sure you want to cancel this appointment?')) {
@@ -94,6 +187,8 @@ const Booking = () => {
             }
         }
     };
+   
+    
     
     // --- Helper for UI Styling ---
     const getStatusColor = (status) => {
@@ -119,10 +214,28 @@ const Booking = () => {
                 <form onSubmit={onSubmit} className="space-y-4">
                     <div>
                         <label htmlFor="counselor" className="block text-sm font-medium text-gray-700">Select Counselor</label>
-                        <select id="counselor" name="counselor" value={counselor} onChange={onChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        
+   <select id="counselor"
+  name="counselor"
+  value={counselor}
+  onChange={onChange}
+  className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+>
+  <option value="">-- Choose a counselor --</option>
+  {Array.isArray(counselors) &&
+    counselors.map(c => (
+      <option key={c._id} value={c._id}>
+        ({c.specializations?.join(", ")})
+      </option>
+    ))}
+</select>
+
+                        
+                        
+                        {/* <select id="counselor" name="counselor" value={counselor} onChange={onChange} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                             <option value="">-- Choose a counselor --</option>
-                            {counselors.map(c => <option key={c._id} value={c._id}>{c.fullName}</option>)}
-                        </select>
+                            {counselors.map(c => <option key={c._id} value={c._id}>{c.specializations}</option>)}
+                        </select> */}
                     </div>
                      <div>
                         <label htmlFor="date" className="block text-sm font-medium text-gray-700">Select Date</label>

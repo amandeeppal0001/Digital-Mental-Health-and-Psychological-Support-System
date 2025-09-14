@@ -70,15 +70,23 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Function to handle user login
+  // const login = (token) => {
+  //   localStorage.setItem('authToken', token);
+  //   const decodedUser = jwtDecode(token);
+  //   setUser(decodedUser);
+  // };
+
   const login = (token) => {
-    localStorage.setItem('authToken', token);
-    const decodedUser = jwtDecode(token);
-    setUser(decodedUser);
-  };
+  localStorage.setItem("authToken", token);
+  const decodedUser = jwtDecode(token);
+  localStorage.setItem("user", JSON.stringify(decodedUser)); // ✅ add this
+  setUser(decodedUser);
+};
 
   // Function to handle user logout
   const logout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem("user");
     setUser(null);
   };
 

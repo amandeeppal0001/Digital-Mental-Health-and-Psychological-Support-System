@@ -4,6 +4,8 @@ import { BrowserRouter , Route, Routes } from 'react-router-dom';
 import Navbar from '../src/components/Navbar.jsx';
 import Home from '../src/pages/Home';
 import Login from '../src/pages/Login';
+import CounselorRegister from './pages/CounselorRegister'; // ⬅️ add this import
+
 import Register from '../src/pages/Register';
 import Dashboard from '../src/pages/Dashboard';
 import Resources from '../src/pages/Resources';
@@ -26,6 +28,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/register/counselor" element={<CounselorRegister />} />  
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/resources" element={<Resources />} />
                           <Route path="/resources/:resourceId" element={<ResourceDetail />} />

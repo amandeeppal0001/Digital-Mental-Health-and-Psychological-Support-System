@@ -43,15 +43,29 @@ API.interceptors.request.use(
  * @desc    Fetches all users with the 'counselor' role.
  * @route   GET /api/appointments/counselors
  */
-// export const getAvailableCounselors = () => API.get('/appointments/counselor');
+export const getAvailableCounselors = () => API.get('/appointments');
 
 /**
  * @desc    Creates a new appointment for the logged-in user.
  * @route   POST /api/appointments
  * @param   {object} bookingData - Contains counselor, date, timeSlot, and notes.
  */
-export const bookAppointment = (bookingData) => API.post('/appointments/book', bookingData);
+// export const bookAppointment = (bookingData) => API.post('/appointments/book', bookingData);
+export const bookAppointment = (bookingData) => {
+  const { counselor, timeSlot, mode = "Online" } = bookingData;
 
+  // Convert "date + timeSlot" into proper ISO datetime
+  const [startTime] = timeSlot.split(" - "); // e.g. "09:00 AM"
+  const appointmentTime = new Date(`${date} ${startTime}`).toISOString();
+
+  const payload = {
+    counselorId: counselor,
+    appointmentTime,
+    mode
+  };
+
+  return API.post("/appointments/book", payload);
+};
 /**
  * @desc    Fetches all appointments booked by the current logged-in user.
  * @route   GET /api/appointments/my-bookings
