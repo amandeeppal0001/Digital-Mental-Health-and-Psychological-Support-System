@@ -1,83 +1,11 @@
-// import React, { useState } from 'react';
-// import { Link, NavLink, useNavigate } from 'react-router-dom';
-// import { useAuth } from '../context/AuthContext';
 
-// const Navbar = () => {
-//     const [isOpen, setIsOpen] = useState(false);
-//     const navigate = useNavigate();
-
-//     const { user, logout } = useAuth();
-//     // console.log('Current User in Navbar:', user); // Optional: Uncomment this to debug the user object
-
-//     const handleLogout = async () => {
-//         try {
-//             await logout();
-//             navigate('/login');
-//         } catch (error) {
-//             console.error("Navbar Logout Error:", error);
-//             navigate('/login');
-//         }
-//     };
-
-//     const navLinkClass = ({ isActive }) =>
-//         `block py-2 px-3 rounded ${isActive ? 'bg-blue-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`;
-
-//     return (
-//         <nav className="bg-gray-800 fixed w-full z-20 top-0 left-0 border-b border-gray-600">
-//             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-//                 <Link to="/" className="flex items-center space-x-3">
-//                     <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">MindWell</span>
-//                 </Link>
-
-//                 <button
-//                     onClick={() => setIsOpen(!isOpen)}
-//                     className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 rounded-lg md:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
-//                 >
-//                     <span className="sr-only">Open main menu</span>
-//                     <svg className={`w-5 h-5 ${isOpen ? 'hidden' : 'block'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/></svg>
-//                     <svg className={`w-5 h-5 ${isOpen ? 'block' : 'hidden'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
-//                 </button>
-
-//                 <div className={`${isOpen ? 'block' : 'hidden'} w-full md:block md:w-auto`} id="navbar-default">
-//                     <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-700 rounded-lg bg-gray-800 md:flex-row md:space-x-8 md:mt-0 md:border-0">
-//                         {user ? (
-//                             <>
-//                                 <li><NavLink to="/resources" className={navLinkClass}>Resources</NavLink></li>
-//                                 <li><NavLink to="/forum" className={navLinkClass}>Forum</NavLink></li>
-
-//                                 {/* ✅ FIX: Changed '/booking' to '/book-appointment' to match App.jsx */}
-//                                 {user.role === 'student' && (
-//                                     <li><NavLink to="/book-appointment" className={navLinkClass}>Book Appointment</NavLink></li>
-//                                 )}
-
-//                                 {user.role === 'admin' && (
-//                                     <li><NavLink to="/admin/dashboard" className={navLinkClass}>Dashboard</NavLink></li>
-//                                 )}
-//                                 <li>
-//                                     <button onClick={handleLogout} className="block w-full text-left py-2 px-3 text-red-400 hover:bg-gray-700 hover:text-red-300 rounded">
-//                                         Logout
-//                                     </button>
-//                                 </li>
-//                             </>
-//                         ) : (
-//                             <>
-//                                 <li><NavLink to="/login" className={navLinkClass}>Login</NavLink></li>
-//                                 <li><NavLink to="/register" className={navLinkClass}>Register</NavLink></li>
-//                             </>
-//                         )}
-//                     </ul>
-//                 </div>
-//             </div>
-//         </nav>
-//     );
-// };
-
-// export default Navbar;
-
+  import axios from 'axios';
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // ✅ 1. Import the useAuth hook
-
+import { logoutUser } from '../services/authService';
+// import { Loader2 } from "lucide-react";
+// import { useAuth } from '../context/AuthContext'; 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -95,37 +23,29 @@ const Navbar = () => {
   //     navigate('/login');
   // };
 
-  const handleLogout = async () => {
+
+// This function assumes 'navigate' is available from the useNavigate hook in your component.
+// Example: const navigate = useNavigate();
+
+const handleLogout = async (e) => {
+    e.preventDefault();
+    
     try {
-      const response = await fetch(
-        "https://digital-mental-health-and-psycholog.vercel.app/api/auth/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          // This is essential. It tells the browser to send cookies to the backend.
-          // Your backend needs the cookies to identify the user and clear the session.
-          credentials: "include",
-        }
-      );
+     
+     const res= await logoutUser();
 
-      if (!response.ok) {
-        // Handle cases where the server fails to log out the user
-        throw new Error("Logout failed. Please try again.");
-      }
-
-      // If the API call is successful, the backend has cleared the auth cookies.
-      console.log("User logged out successfully from the backend.");
-
-      // Redirect the user to the login page.
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout Error:", error);
-      // Optionally, inform the user that the logout failed.
-      alert(error.message);
+      console.log('Server Response:', res.data); 
+      logout();
+     
+      navigate('/')
+    
+      
+    } catch (err) {
+      console.error(err.response?.data);
     }
+   
   };
+
 
   const navLinkClass = ({ isActive }) =>
     `block py-2 px-3 rounded ${

@@ -4,31 +4,53 @@ import axios from 'axios';
 const API = axios.create({
   baseURL: 'https://digital-mental-health-and-psycholog.vercel.app/api',
   // baseURL: /*process.env.REACT_APP_API_URL || */'http://localhost:5000', // Adjust if your backend URL is different
+  headers: {
+        'Content-Type': 'application/json'
+    },
   withCredentials: true, // Important for sending cookies if you use them for sessions
 });
 
 // Interceptor to add the auth token to every request
-API.interceptors.request.use((req) => {
-  const token = localStorage.getItem('authToken');
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
-  }
-  return req;
-});
+// API.interceptors.request.use((req) => {
+//   const token = localStorage.getItem('authToken');
+//   if (token) {
+//     req.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return req;
+// });
+
+API.interceptors.request.use(
+    (config) => {
+        // Get the token from local storage
+        const token = localStorage.getItem('authToken');
+        
+        // If the token exists, add it to the Authorization header
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        return config; // Return the modified config
+    },
+    (error) => {
+        // Handle request errors
+        return Promise.reject(error);
+    }
+);
+
 
 
 /**
  * @desc    Fetches all users with the 'counselor' role.
  * @route   GET /api/appointments/counselors
  */
-export const getAvailableCounselors = () => API.get('/appointments/counselor');
+// export const getAvailableCounselors = () => API.get('/appointments/counselor');
 
 /**
  * @desc    Creates a new appointment for the logged-in user.
  * @route   POST /api/appointments
  * @param   {object} bookingData - Contains counselor, date, timeSlot, and notes.
  */
-export const bookAppointment = (bookingData) => API.post('/appointments', bookingData);
+export const bookAppointment = (bookingData) => API.post('/appointments/book', bookingData);
 
 /**
  * @desc    Fetches all appointments booked by the current logged-in user.
@@ -41,7 +63,7 @@ export const getMyBookings = () => API.get('/appointments/my-appointments');
  * @route   PUT /api/appointments/:bookingId/cancel
  * @param   {string} bookingId - The ID of the appointment to cancel.
  */
-export const cancelBooking = (bookingId) => API.put(`/appointments/${bookingId}/cancel`);
+export const cancelBooking = (bookingId) => API.put(`/appointments/cancel/${bookingId}`);
 
 // You can add more functions here later, for example:
 // export const updateAppointmentStatus = (bookingId, status) => API.put(`/appointments/${bookingId}/status`, { status });

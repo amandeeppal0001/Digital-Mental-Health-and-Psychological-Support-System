@@ -6,7 +6,8 @@ import {
     getMyAppointments,
     cancelAppointment,
     getCounselorAppointments,
-    updateAppointmentStatus
+    updateAppointmentStatus,
+    getAllCounselor
 } from '../controllers/appointmentController.js';
 
 const router = express.Router();
@@ -27,7 +28,7 @@ router.get('/my-appointments', getMyAppointments);
 // PATCH /api/appointments/cancel/:appointmentId -> Cancel an appointment
 router.patch('/cancel/:appointmentId', cancelAppointment);
 
-
+router.get('/', getAllCounselor);
 // --- Counselor Routes ---
 // GET /api/appointments/counselor -> Get all appointments for the logged-in counselor
 router.get('/counselor', getCounselorAppointments);

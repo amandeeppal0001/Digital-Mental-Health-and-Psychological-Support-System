@@ -1,33 +1,3 @@
-// import axios from 'axios';
-
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api' || 'http://localhost:5173';
-
-// // Setup axios instance
-//  export const api = axios.create({
-//     baseURL: API_URL,
-//     headers: {
-//         'Content-Type': 'application/json'
-//     },
-//     withCredentials: true // Important for sending cookies
-// });
-
-// export const loginUser = (userData) => {
-//     return api.post('/auth/login', userData);
-// };
-
-// export const registerUser = (userData) => {
-//     return api.post('/auth/register', userData);
-// };
-
-// export const logoutUser = () => {
-//     return api.post('/auth/logout');
-// };
-
-// export const checkAuthStatus = () => {
-//     return api.get('/status');
-// };
-
-// export default api;
 
 
 

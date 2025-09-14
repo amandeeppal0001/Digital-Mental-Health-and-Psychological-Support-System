@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAvailableCounselors, bookAppointment, getMyBookings, cancelBooking } from '../services/appointmentService';
+// import { getAvailableCounselors, bookAppointment, getMyBookings, cancelBooking } from '../services/appointmentService';
+import {  bookAppointment, getMyBookings, cancelBooking } from '../services/appointmentService';
 
 // Pre-defined time slots for simplicity. In a more advanced version,
 // this could be fetched from the backend based on counselor availability.
@@ -36,10 +37,10 @@ const Booking = () => {
         try {
             // Use Promise.all to fetch both sets of data in parallel for better performance
             const [counselorsRes, bookingsRes] = await Promise.all([
-                getAvailableCounselors(),
+                // getAvailableCounselors(),
                 getMyBookings()
             ]);
-            setCounselors(counselorsRes.data);
+            // setCounselors(counselorsRes.data);
             setMyBookings(bookingsRes.data);
         } catch (err) {
             setError('Failed to load page data. Please refresh the page.');

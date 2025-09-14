@@ -90,7 +90,10 @@ export const getAvailableSlots = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, availableSlots, "Available slots fetched successfully."));
 });
 
-
+export const getAllCounselor = asyncHandler(async (req, res) => {
+    const counselors = await Counselor.find().sort({ createdAt: -1 });
+    res.status(200).json(new ApiResponse(200, counselors, "Resources fetched successfully."));
+});
 /**
  * @desc    Book an appointment with a counselor
  * @route   POST /api/appointments/book

@@ -12,40 +12,6 @@ import Booking from '../src/pages/Booking';
 import AdminDashboard from '../src/pages/AdminDashboard';
 import ResourceDetail from './pages/ResourceDetail.jsx';
 import ForumPost from './pages/ForumPost.jsx';
-// import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
-
-// export default function App() {
-//   return (
-//     <header>
-//       <SignedOut>
-//         <SignInButton />
-//       </SignedOut>
-//       <SignedIn>
-//         <UserButton />
-//       </SignedIn>
-//     </header>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function App() {
   return (
