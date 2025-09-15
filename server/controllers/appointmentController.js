@@ -102,12 +102,20 @@ export const getAllCounselor = asyncHandler(async (req, res) => {
 export const bookAppointment = asyncHandler(async (req, res) => {
     const { counselorId, appointmentTime, mode } = req.body;
     const studentId = req.user._id;
+    console.log(`Attempting to book for counselor: ${counselorId}`);
+    console.log(`Requested time: ${appointmentTime}`);
+    console.log(`Requested mode: ${mode}`);
 
     if (!counselorId || !appointmentTime) {
+        console.log("Counselor ID and appointment time are required.");
         throw new ApiError(400, "Counselor ID and appointment time are required.");
+        
+        
     }
      // Validate that time includes both date and time
     if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(appointmentTime)) {
+                console.log("Appointment time must include both date and time in format YYYY-MM-DDTHH:mm");
+
         throw new ApiError(400, "Appointment time must include both date and time in format YYYY-MM-DDTHH:mm");
     }
 
@@ -115,12 +123,15 @@ export const bookAppointment = asyncHandler(async (req, res) => {
     const appointmentDate = new Date(appointmentTime);
 const now = new Date();
 if (appointmentDate < now) {
+    console.log("You cannot book an appointment in the past.");
+    
     throw new ApiError(400, "You cannot book an appointment in the past.");
 }
 
     // 1️⃣ Get counselor and their availability
 const counselor = await Counselor.findById(counselorId);
     if (!counselor) {
+        console.log("Counselor not found.");
         throw new ApiError(404, "Counselor not found.");
     }
 
@@ -130,6 +141,8 @@ const counselor = await Counselor.findById(counselorId);
     );
 
     if (!dayAvailability) {
+        console.log(`Counselor is not available on ${dayOfWeek}.`);
+        
         throw new ApiError(400, `Counselor is not available on ${dayOfWeek}.`);
     }
 
@@ -144,6 +157,8 @@ const counselor = await Counselor.findById(counselorId);
     endTime.setHours(endHour, endMinute, 0, 0);
 
     if (appointmentDate < startTime || appointmentDate >= endTime) {
+        console.log(`Appointment time must be between ${dayAvailability.startTime} and ${dayAvailability.endTime} on ${dayOfWeek}.You should only book hour one before of counselor's endtime availibility hour `);
+        
         throw new ApiError(400, `Appointment time must be between ${dayAvailability.startTime} and ${dayAvailability.endTime} on ${dayOfWeek}.You should only book hour one before of counselor's endtime availibility hour `);
     }
 
@@ -162,6 +177,8 @@ const slotEndTime  = new Date(appointmentDate.getTime() + slotDurationMinutes * 
     });
 
     if (existingAppointment) {
+        console.log("This appointment slot is no longer available.");
+        
         throw new ApiError(409, "This appointment slot is no longer available.");
     }
     
@@ -174,6 +191,8 @@ const slotEndTime  = new Date(appointmentDate.getTime() + slotDurationMinutes * 
     });
 
     res.status(201).json(new ApiResponse(201, appointment, "Appointment booked successfully."));
+    console.log("Appointment booked successfully.");
+    
 });
 
 /**

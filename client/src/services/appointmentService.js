@@ -52,7 +52,7 @@ export const getAvailableCounselors = () => API.get('/appointments');
  */
 // export const bookAppointment = (bookingData) => API.post('/appointments/book', bookingData);
 export const bookAppointment = (bookingData) => {
-  const { counselor, timeSlot, mode = "Online" } = bookingData;
+  const { counselor, timeSlot,  mode = "Online" } = bookingData;
 
   // Convert "date + timeSlot" into proper ISO datetime
   const [startTime] = timeSlot.split(" - "); // e.g. "09:00 AM"

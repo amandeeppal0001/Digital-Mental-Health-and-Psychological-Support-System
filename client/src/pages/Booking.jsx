@@ -85,12 +85,16 @@ const onSubmit = async (e) => {
     const appointmentDateTime = `${date}T${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 
     const payload = {
-      counselorId: counselor,
+     counselorId: "68b3d4145230a44c1808663c",
+    //  counselorId: counselor,
       appointmentTime: appointmentDateTime,
       mode: "Online",
     };
-
-    await bookAppointment(payload);
+        console.log(payload);
+        
+   const res = await bookAppointment(payload);
+   console.log(res);
+   
 
     setSuccess("Appointment booked successfully! Your bookings list has been updated below.");
     setFormData({ counselor: "", date: "", timeSlot: "", notes: "" });
